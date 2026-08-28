@@ -407,19 +407,7 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            children: [
-              Icon(Icons.search_rounded, size: 20, color: AppColors.primary),
-              SizedBox(width: 8),
-              Text(
-                'استعلام عن نوبة تاريخ معين',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // زر اختيار التاريخ
+          // زر اختيار التاريخ (يبدأ بتاريخ اليوم افتراضياً)
           InkWell(
             onTap: () async {
               final picked = await showDatePicker(
