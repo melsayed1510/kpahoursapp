@@ -10,7 +10,8 @@ jobs:
     name: Build Android APK
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
       
       - name: Set up Java JDK
         uses: actions/setup-java@v4
@@ -24,8 +25,14 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Initialize Android Platform Files
+        run: flutter create --platforms=android .
+
       - name: Get Dependencies
         run: flutter pub get
+
+      - name: Run Tests
+        run: flutter test
 
       - name: Build Android APK (Release)
         run: flutter build apk --release
@@ -40,7 +47,8 @@ jobs:
     name: Build iOS App
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -48,10 +56,13 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Initialize iOS Platform Files
+        run: flutter create --platforms=ios .
+
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Build iOS (Release)
+      - name: Build iOS (No codesign)
         run: flutter build ios --release --no-codesign
 
       - name: Upload iOS Payload
@@ -59,3 +70,4 @@ jobs:
         with:
           name: KPA-Shift-Tracker-iOS
           path: build/ios/iphoneos
+
