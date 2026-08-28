@@ -14,6 +14,32 @@ void main() {
     expect(result.presenceEnd, const TimeOfDay(hour: 10, minute: 30));
     expect(result.outTime, const TimeOfDay(hour: 14, minute: 0));
     expect(result.outTimeNextDay, false);
+    expect(result.isLate, false);
+    expect(result.lateMinutes, 0);
+    expect(result.cappedOutTime, const TimeOfDay(hour: 14, minute: 0));
+  });
+
+  test('دخول مبكر 06:00: بصمة التواجد تبدأ إجبارياً من 09:01 حتى 10:00', () {
+    final result = service.calculate(
+      inTime: const TimeOfDay(hour: 6, minute: 0),
+      shiftDuration: const Duration(hours: 6, minutes: 30),
+    );
+    expect(result.presenceStart, const TimeOfDay(hour: 9, minute: 1));
+    expect(result.presenceEnd, const TimeOfDay(hour: 10, minute: 0));
+    expect(result.isEarlyPresenceAdjusted, true);
+    expect(result.outTime, const TimeOfDay(hour: 12, minute: 30));
+    expect(result.isLate, false);
+  });
+
+  test('دخول متأخر بعد 08:30 (مثلاً 09:00 مع دوام 6:30): تأخير 30 دقيقة وسقف الخروج 15:00', () {
+    final result = service.calculate(
+      inTime: const TimeOfDay(hour: 9, minute: 0),
+      shiftDuration: const Duration(hours: 6, minutes: 30),
+    );
+    expect(result.isLate, true);
+    expect(result.lateMinutes, 30);
+    expect(result.cappedOutTime, const TimeOfDay(hour: 15, minute: 0));
+    expect(result.outTime, const TimeOfDay(hour: 15, minute: 30));
   });
 
   test('تجاوز منتصف الليل: دخول 22:00 ودوام 6:00', () {

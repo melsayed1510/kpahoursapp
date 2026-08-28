@@ -39,7 +39,46 @@ class ResultCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. بطاقة بصمة التواجد (من .. إلى)
+          if (result.isLate) ...[
+            Container(
+              margin: const EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF2F2),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFECACA)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.warning_amber_rounded, color: Color(0xFFDC2626), size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'تأخير مسجل: ${result.lateMinutes} دقيقة',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF991B1B),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'الحد الأقصى المسموح للدخول 08:30 ص. ساعات العمل لا تمتد لما بعد سقف الدوام.',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFFB91C1C),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -50,24 +89,41 @@ class ResultCard extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.hourglass_top_rounded, size: 17, color: Color(0xFF0284C7)),
-                    SizedBox(width: 6),
-                    Text(
-                      'بصمة التواجد',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
+                    const Row(
+                      children: [
+                        Icon(Icons.hourglass_top_rounded, size: 17, color: Color(0xFF0284C7)),
+                        SizedBox(width: 6),
+                        Text(
+                          'بصمة التواجد',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                      ],
                     ),
+                    if (result.isEarlyPresenceAdjusted)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFBFDBFE)),
+                        ),
+                        child: const Text(
+                          'تبدأ 09:00 ص إجبارياً',
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1D4ED8)),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    // من
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
@@ -103,13 +159,10 @@ class ResultCard extends ConsumerWidget {
                         ),
                       ),
                     ),
-
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Icon(Icons.arrow_back_rounded, size: 18, color: Color(0xFF94A3B8)),
                     ),
-
-                    // إلى
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
@@ -150,46 +203,60 @@ class ResultCard extends ConsumerWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 12),
-
-          // 2. بطاقة بصمة الخروج
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              color: const Color(0xFFECFDF5),
+              color: result.isLate ? const Color(0xFFFFFBEB) : const Color(0xFFECFDF5),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFA7F3D0), width: 1.5),
+              border: Border.all(
+                color: result.isLate ? const Color(0xFFFDE68A) : const Color(0xFFA7F3D0),
+                width: 1.5,
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.logout_rounded, color: Color(0xFF059669), size: 22),
-                    SizedBox(width: 10),
-                    Text(
-                      'بصمة الخروج',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF065F46),
-                      ),
+                    Icon(
+                      Icons.logout_rounded,
+                      color: result.isLate ? const Color(0xFFD97706) : const Color(0xFF059669),
+                      size: 22,
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          result.isLate ? 'موعد الخروج المعتمد (الحد الأقصى)' : 'بصمة الخروج',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: result.isLate ? const Color(0xFF92400E) : const Color(0xFF065F46),
+                          ),
+                        ),
+                        if (result.isLate)
+                          Text(
+                            'سقف الدوام بناءً على دخول 08:30',
+                            style: TextStyle(fontSize: 11, color: Colors.orange.shade800),
+                          ),
+                      ],
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    if (result.outTimeNextDay) ...[
+                    if (result.isLate ? result.cappedOutTimeNextDay : result.outTimeNextDay) ...[
                       _buildNextDayBadge(),
                       const SizedBox(width: 8),
                     ],
                     Text(
-                      _formatTime(result.outTime),
-                      style: const TextStyle(
+                      _formatTime(result.isLate ? result.cappedOutTime : result.outTime),
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF059669),
+                        color: result.isLate ? const Color(0xFFD97706) : const Color(0xFF059669),
                       ),
                     ),
                   ],

@@ -10,10 +10,20 @@
   <style>
     :root {
       --primary: #1F5FA8;
-      --bg: #F4F6F9;
+      --primary-light: #EFF6FF;
+      --primary-dark: #174A84;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
       --text-main: #1E293B;
       --text-sub: #64748B;
       --border: #E2E8F0;
+      
+      --shift-a: #1E40AF;
+      --shift-a-bg: #EFF6FF;
+      --shift-b: #047857;
+      --shift-b-bg: #ECFDF5;
+      --shift-c: #B45309;
+      --shift-c-bg: #FFFBEB;
     }
 
     * {
@@ -30,15 +40,15 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      padding: 16px;
     }
 
-    /* Device Mockup */
+    /* Device Container */
     .device-container {
       width: 100%;
-      max-width: 420px;
-      height: 840px;
-      background: #FFFFFF;
+      max-width: 440px;
+      height: 880px;
+      background: var(--bg);
       border-radius: 40px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 10px #1e293b;
       display: flex;
@@ -58,288 +68,363 @@
       font-size: 13px;
       font-weight: 700;
       color: #334155;
-      z-index: 10;
     }
 
     /* App Bar */
-    .app-bar {
+    .app-header {
+      background: #FFFFFF;
       padding: 12px 20px;
-      text-align: center;
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-title {
+      font-size: 17px;
       font-weight: 800;
       color: var(--text-main);
-      border-bottom: 1px solid var(--border);
-      background: #FFFFFF;
     }
 
-    /* Content Area */
-    .app-body {
+    /* Scrollable Content */
+    .app-content {
       flex: 1;
       overflow-y: auto;
       padding: 16px;
-      background: var(--bg);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* Ultra Minimal Shift Header Card */
-    .shift-header-card {
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      height: 64px;
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 14px 18px;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      border-top: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
+      padding: 0 10px;
     }
-
-    .date-row {
+    .nav-item {
+      flex: 1;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .shift-circle-mini {
-      width: 38px;
-      height: 38px;
-      background: rgba(31, 95, 168, 0.1);
-      color: var(--primary);
-      border: 1.5px solid rgba(31, 95, 168, 0.25);
-      border-radius: 50%;
-      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 19px;
-      font-weight: 900;
+      gap: 4px;
+      cursor: pointer;
+      color: #94A3B8;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      height: 100%;
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
     }
 
-    /* Section Card */
+    /* Card Standard */
     .card {
-      background: #FFFFFF;
+      background: var(--card-bg);
       border-radius: 20px;
-      padding: 18px;
+      padding: 16px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
-    .card-title {
-      font-size: 15px;
+    /* Shift Header Hero Card */
+    .hero-card {
+      background: linear-gradient(135deg, #1F5FA8 0%, #0F3C70 100%);
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 10px 25px rgba(31, 95, 168, 0.25);
+    }
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .date-badge {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+    .shift-hero-badge {
+      background: #FFFFFF;
+      color: var(--primary);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .hero-main {
+      text-align: center;
+      margin: 8px 0;
+    }
+    .hero-shift-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+    .hero-shift-sub {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 14px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
-    .label {
-      font-size: 13px;
+    /* Input Controls */
+    .input-label {
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-sub);
+      margin-bottom: 6px;
+      display: block;
     }
-
-    .time-input-box {
+    .time-picker-btn {
       width: 100%;
-      padding: 11px 16px;
-      border-radius: 14px;
-      border: 1.5px solid var(--primary);
-      background: rgba(31, 95, 168, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .time-input-box input[type="time"] {
-      border: none;
-      background: transparent;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--primary);
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
-      width: 100%;
-      letter-spacing: 1px;
-    }
-
-    /* Separate Duration Selectors */
-    .duration-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-
-    .duration-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .sub-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-sub);
-    }
-
-    .duration-field {
       background: #F8FAFC;
-      border: 1.5px solid var(--border);
+      border: 1px solid #CBD5E1;
       border-radius: 14px;
-      padding: 9px 14px;
+      padding: 12px 14px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      transition: border-color 0.2s;
-    }
-
-    .duration-field:focus-within {
-      border-color: var(--primary);
-      background: rgba(31, 95, 168, 0.03);
-    }
-
-    .duration-select {
-      border: none;
-      background: transparent;
+      align-items: center;
+      cursor: pointer;
       font-size: 15px;
-      font-weight: 800;
-      color: #1E293B;
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
-      width: 100%;
-      text-align: center;
+      font-weight: 700;
+      color: var(--text-main);
     }
-
-    .duration-badge {
-      font-size: 12px;
-      font-weight: 800;
+    .time-picker-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
       color: var(--primary);
-      background: rgba(31, 95, 168, 0.1);
-      padding: 3px 8px;
-      border-radius: 8px;
     }
 
-    /* Redesigned Results Card */
-    .presence-window-box {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .presence-window-title {
+    .dropdown-row {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 10px;
+    }
+    .dropdown-group {
+      flex: 1;
+    }
+    .styled-select {
+      width: 100%;
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 10px 12px;
       font-size: 14px;
-      font-weight: 800;
-      color: #1E293B;
+      font-weight: 700;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    /* Warning Banner for Late */
+    .late-banner {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #991B1B;
+      display: flex;
+      gap: 10px;
+      align-items: center;
       margin-bottom: 10px;
     }
-
-    .presence-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .late-banner-text {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .late-banner-title {
+      font-weight: 800;
+      font-size: 13px;
     }
 
-    .presence-mini-card {
+    /* Result Box */
+    .result-box {
+      background: #F8FAFC;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .result-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .result-item {
       flex: 1;
       background: #FFFFFF;
       border: 1px solid #CBD5E1;
       border-radius: 10px;
-      padding: 8px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      padding: 8px 10px;
     }
-
-    .presence-mini-label {
-      font-size: 12px;
+    .result-item-label {
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-sub);
     }
-
-    .presence-mini-time {
-      font-size: 15px;
+    .result-item-val {
+      font-size: 14px;
       font-weight: 800;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .time-start { color: #0284C7; }
-    .time-end { color: #D97706; }
-
-    .arrow-icon {
-      color: #94A3B8;
-      font-size: 16px;
     }
 
     .out-time-card {
-      margin-top: 12px;
       background: #ECFDF5;
       border: 1.5px solid #A7F3D0;
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .out-time-card.is-late {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
 
-    .out-time-title {
+    /* Calendar & Schedule View */
+    .date-nav-bar {
+      background: var(--primary);
+      border-radius: 16px;
+      color: #FFFFFF;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-arrow-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #065F46;
-    }
-
-    .out-time-value-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .out-time-value {
-      font-size: 18px;
-      font-weight: 900;
-      color: #059669;
-    }
-
-    .badge-next-day {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 6px;
-      background: #FFF7ED;
-      color: #C2410C;
-      border: 1px solid #FDBA74;
-    }
-
-    /* Bottom Bar */
-    .bottom-bar {
-      height: 24px;
-      background: #FFFFFF;
-      display: flex;
       justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .nav-month-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0;
       align-items: center;
     }
-    .home-indicator {
-      width: 120px;
-      height: 4px;
-      background: #CBD5E1;
-      border-radius: 4px;
+    .filter-btn {
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
     }
+    .filter-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .weekday-header {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-sub);
+      padding-bottom: 4px;
+    }
+    .day-cell {
+      aspect-ratio: 0.85;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .day-cell.empty {
+      border: none;
+      background: transparent;
+    }
+    .day-cell.is-today {
+      border: 2px solid var(--primary) !important;
+    }
+    .day-cell .shift-tag {
+      font-size: 9px;
+      font-weight: 900;
+      color: #FFFFFF;
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin-top: 2px;
+    }
+    .shift-a-cell { background: var(--shift-a-bg); border-color: rgba(30, 64, 175, 0.3); }
+    .shift-a-cell .shift-tag { background: var(--shift-a); }
+
+    .shift-b-cell { background: var(--shift-b-bg); border-color: rgba(4, 120, 87, 0.3); }
+    .shift-b-cell .shift-tag { background: var(--shift-b); }
+
+    .shift-c-cell { background: var(--shift-c-bg); border-color: rgba(180, 83, 9, 0.3); }
+    .shift-c-cell .shift-tag { background: var(--shift-c); }
+
+    /* Monthly Stats */
+    .stats-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .stat-box {
+      flex: 1;
+      padding: 8px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .stat-box.a { background: var(--shift-a-bg); color: var(--shift-a); border: 1px solid rgba(30, 64, 175, 0.2); }
+    .stat-box.b { background: var(--shift-b-bg); color: var(--shift-b); border: 1px solid rgba(4, 120, 87, 0.2); }
+    .stat-box.c { background: var(--shift-c-bg); color: var(--shift-c); border: 1px solid rgba(180, 83, 9, 0.2); }
+    .stat-val { font-size: 15px; font-weight: 900; }
   </style>
 </head>
 <body>
@@ -347,237 +432,394 @@
   <div class="device-container">
     <!-- Status Bar -->
     <div class="status-bar">
-      <span id="live-time">09:41</span>
-      <span>📶 🔋 100%</span>
+      <span>09:41</span>
+      <span>📶 🔋</span>
     </div>
 
-    <!-- App Bar -->
-    <div class="app-bar">
-      شيفت اليوم ومواعيد البصمة
+    <!-- App Header -->
+    <div class="app-header">
+      <div class="header-title" id="page-title">شيفت اليوم ومواعيد البصمة</div>
+      <div style="font-size: 12px; color: #64748B; font-weight: 700;">مؤسسة الموانئ</div>
     </div>
 
-    <!-- App Body -->
-    <div class="app-body">
-      
-      <!-- Ultra Minimal Shift Header Card -->
-      <div class="shift-header-card">
-        <div class="date-row">
-          <span style="font-size: 17px; color: var(--primary);">📅</span>
-          <span id="current-date-text">السبت، 29 أغسطس 2026</span>
+    <!-- Scrollable Content -->
+    <div class="app-content" id="tab-calculator">
+      <!-- 1. Hero Shift Card -->
+      <div class="card hero-card">
+        <div class="hero-top">
+          <span class="date-badge" id="hero-date">السبت، 29 أغسطس 2026</span>
+          <span class="shift-hero-badge" id="hero-shift-badge">وردية A</span>
         </div>
-
-        <div class="shift-circle-mini" id="shift-letter">A</div>
+        <div class="hero-main">
+          <div class="hero-shift-title" id="hero-shift-name">نوبة العمل: A</div>
+          <div class="hero-shift-sub">دورة النوبات الثلاثية المعتمدة</div>
+        </div>
       </div>
 
-      <!-- Time & Duration Input -->
+      <!-- 2. Time Input Card -->
       <div class="card">
-        <div class="card-title">
-          <span>⚡</span>
+        <div class="section-title">
+          <span>🕒</span>
           <span>حاسبة البصمة وساعات العمل</span>
         </div>
 
-        <!-- 1. وقت بصمة الدخول -->
-        <div class="label">وقت بصمة الدخول</div>
-        <div class="time-input-box" style="margin-top: 6px;">
-          <input type="time" id="in-time-input" value="07:30">
-          <span>🕒</span>
+        <label class="input-label">وقت بصمة الدخول</label>
+        <div class="time-picker-btn active" onclick="openTimePrompt()">
+          <div>
+            <span style="font-size: 16px; margin-left: 6px;">⏰</span>
+            <span id="in-time-display">07:30 صباحاً</span>
+          </div>
+          <span style="font-size: 13px; color: var(--primary);">تعديل</span>
         </div>
 
-        <!-- 2. مدة الدوام كحقول منفصلة للساعات والدقائق -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px;">
-          <div class="label">مدة الدوام الرسمية</div>
-          <div class="duration-badge" id="duration-total-badge">المجموع: 06:30 س</div>
-        </div>
-
-        <div class="duration-row">
-          <!-- حقل الساعات -->
-          <div class="duration-col">
-            <div class="sub-label">الساعات</div>
-            <div class="duration-field">
-              <select id="duration-hours" class="duration-select">
-                <option value="1">01</option>
-                <option value="2">02</option>
-                <option value="3">03</option>
-                <option value="4">04</option>
-                <option value="5">05</option>
-                <option value="6" selected>06</option>
-                <option value="7">07</option>
-                <option value="8">08</option>
-                <option value="9">09</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
+        <div style="margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <label class="input-label" style="margin-bottom: 0;">مدة الدوام الرسمية</label>
+            <span style="font-size: 11px; font-weight: bold; color: var(--primary);" id="total-duration-badge">06:30 س</span>
+          </div>
+          
+          <div class="dropdown-row">
+            <div class="dropdown-group">
+              <label class="input-label">الساعات</label>
+              <select class="styled-select" id="hours-select" onchange="onDurationChange()">
+                <option value="4">04 س</option>
+                <option value="5">05 س</option>
+                <option value="6" selected>06 س</option>
+                <option value="7">07 س</option>
+                <option value="8">08 س</option>
+                <option value="9">09 س</option>
+                <option value="12">12 س</option>
               </select>
             </div>
-          </div>
-
-          <!-- حقل الدقائق -->
-          <div class="duration-col">
-            <div class="sub-label">الدقائق</div>
-            <div class="duration-field">
-              <select id="duration-minutes" class="duration-select">
-                <option value="0">00</option>
-                <option value="5">05</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-                <option value="25">25</option>
-                <option value="30" selected>30</option>
-                <option value="35">35</option>
-                <option value="40">40</option>
-                <option value="45">45</option>
-                <option value="50">50</option>
-                <option value="55">55</option>
+            <div class="dropdown-group">
+              <label class="input-label">الدقائق</label>
+              <select class="styled-select" id="mins-select" onchange="onDurationChange()">
+                <option value="0">00 د</option>
+                <option value="15">15 د</option>
+                <option value="30" selected>30 د</option>
+                <option value="45">45 د</option>
               </select>
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- Redesigned Results Card -->
-      <div class="card">
-
-        <!-- بصمة التواجد (من .. إلى) -->
-        <div class="presence-window-box">
-          <div class="presence-window-title">
-            <span>⏳</span>
-            <span>بصمة التواجد</span>
+      <!-- 3. Result Section -->
+      <div class="card" id="results-card">
+        <!-- Late Warning (conditional) -->
+        <div class="late-banner" id="late-banner" style="display: none;">
+          <span style="font-size: 20px;">⚠️</span>
+          <div class="late-banner-text">
+            <div class="late-banner-title" id="late-title">تأخير مسجل: 15 دقيقة</div>
+            <div>الحد الأقصى للدخول 08:30 ص. ساعات العمل لا تمتد لما بعد سقف الدوام.</div>
           </div>
+        </div>
 
-          <div class="presence-row">
-            <!-- من -->
-            <div class="presence-mini-card">
-              <div class="presence-mini-label">من</div>
-              <div class="presence-mini-time time-start">
-                <span id="res-presence-start">09:31 ص</span>
-                <span id="badge-presence-start"></span>
-              </div>
+        <!-- Presence Window -->
+        <div class="result-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 13px; font-weight: 800; color: #1E293B;">⏳ بصمة التواجد</div>
+            <span id="early-presence-badge" style="font-size: 10px; font-weight: 800; background: #EFF6FF; color: #1D4ED8; padding: 2px 6px; border-radius: 6px; display: none;">تبدأ 09:00 ص إجبارياً</span>
+          </div>
+          <div class="result-row">
+            <div class="result-item">
+              <div class="result-item-label">من</div>
+              <div class="result-item-val" style="color: #0284C7;" id="presence-start-val">09:31 ص</div>
             </div>
-
-            <div class="arrow-icon">←</div>
-
-            <!-- إلى -->
-            <div class="presence-mini-card">
-              <div class="presence-mini-label">إلى</div>
-              <div class="presence-mini-time time-end">
-                <span id="res-presence-end">10:30 ص</span>
-                <span id="badge-presence-end"></span>
-              </div>
+            <span style="color: #94A3B8;">⬅️</span>
+            <div class="result-item">
+              <div class="result-item-label">إلى</div>
+              <div class="result-item-val" style="color: #D97706;" id="presence-end-val">10:30 ص</div>
             </div>
           </div>
         </div>
 
-        <!-- بصمة الخروج البارزة -->
-        <div class="out-time-card">
-          <div class="out-time-title">
-            <span>🚪</span>
-            <span>بصمة الخروج</span>
+        <!-- Out Time -->
+        <div class="out-time-card" id="out-time-card">
+          <div>
+            <div style="font-size: 14px; font-weight: 800; color: #065F46;" id="out-title">بصمة الخروج</div>
+            <div style="font-size: 11px; color: #047857;" id="out-sub">الدوام المكتمل</div>
           </div>
-          <div class="out-time-value-box">
-            <span id="badge-out"></span>
-            <span class="out-time-value" id="res-out-time">02:00 م</span>
-          </div>
+          <div style="font-size: 19px; font-weight: 900; color: #059669;" id="out-val">02:00 م</div>
         </div>
-
       </div>
-
     </div>
 
-    <!-- Bottom Indicator -->
-    <div class="bottom-bar">
-      <div class="home-indicator"></div>
+    <!-- Tab 2: Schedule (Monthly / Yearly) -->
+    <div class="app-content" id="tab-schedule" style="display: none;">
+      <!-- Date Navigator -->
+      <div class="date-nav-bar">
+        <button class="nav-arrow-btn" onclick="prevMonth()">▶</button>
+        <div>
+          <div class="nav-month-title" id="cal-month-title">أغسطس 2026</div>
+          <div style="font-size: 10px; opacity: 0.9;">دورة النوبات الثلاثية (A / B / C)</div>
+        </div>
+        <button class="nav-arrow-btn" onclick="nextMonth()">◀</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-tabs">
+        <span style="font-size: 11px; font-weight: 800; color: #64748B;">الوردية:</span>
+        <button class="filter-btn active" onclick="setShiftFilter(null, this)">الكل</button>
+        <button class="filter-btn" onclick="setShiftFilter('A', this)">A</button>
+        <button class="filter-btn" onclick="setShiftFilter('B', this)">B</button>
+        <button class="filter-btn" onclick="setShiftFilter('C', this)">C</button>
+      </div>
+
+      <!-- Calendar Box -->
+      <div class="card" style="padding: 12px;">
+        <div class="calendar-grid" id="calendar-days-header">
+          <div class="weekday-header">سبت</div>
+          <div class="weekday-header">أحد</div>
+          <div class="weekday-header">إثنين</div>
+          <div class="weekday-header">ثلاثاء</div>
+          <div class="weekday-header">أربعاء</div>
+          <div class="weekday-header">خميس</div>
+          <div class="weekday-header">جمعة</div>
+        </div>
+        <div class="calendar-grid" id="calendar-days-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Monthly Stats -->
+      <div class="card" style="padding: 12px;">
+        <div style="font-size: 12px; font-weight: 800; color: #334155;">إحصائيات نوبات هذا الشهر:</div>
+        <div class="stats-row">
+          <div class="stat-box a">
+            <div>نوبة A</div>
+            <div class="stat-val" id="stat-count-a">11 يوم</div>
+          </div>
+          <div class="stat-box b">
+            <div>نوبة B</div>
+            <div class="stat-val" id="stat-count-b">10 يوم</div>
+          </div>
+          <div class="stat-box c">
+            <div>نوبة C</div>
+            <div class="stat-val" id="stat-count-c">10 يوم</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+      <div class="nav-item active" id="nav-calc-btn" onclick="switchTab('calc')">
+        <svg viewBox="0 0 24 24"><path d="M12 1a9 9 0 0 0-9 9v1a1 1 0 0 0 2 0v-1a7 7 0 0 1 14 0v1a1 1 0 0 0 2 0v-1a9 9 0 0 0-9-9zm0 4a5 5 0 0 0-5 5v5a1 1 0 0 0 2 0v-5a3 3 0 0 1 6 0v5a1 1 0 0 0 2 0v-5a5 5 0 0 0-5-5zm-2 14a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-2 0v3h-1a1 1 0 0 0-1 1z"/></svg>
+        <span>حاسبة البصمة</span>
+      </div>
+      <div class="nav-item" id="nav-sched-btn" onclick="switchTab('sched')">
+        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z"/></svg>
+        <span>جدول النوبات</span>
+      </div>
     </div>
   </div>
 
   <script>
+    // Shift Algorithm Base: 2026-01-01 was Shift A (0=A, 1=B, 2=C)
     const baseDate = new Date(2026, 0, 1);
-    const cycle = ['A', 'B', 'C'];
+    let selectedDate = new Date(2026, 7, 29); // 29 Aug 2026
+    let calendarDate = new Date(2026, 7, 1);
+    let activeFilter = null;
 
-    function calculateCurrentShift(date = new Date()) {
-      const localDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const diffTime = localDateOnly - baseDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      const index = ((diffDays % 3) + 3) % 3;
-      return cycle[index];
+    let inHour = 7;
+    let inMinute = 30;
+
+    function getShiftForDate(date) {
+      const d1 = new Date(Date.UTC(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate()));
+      const d2 = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const diffDays = Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+      const rem = ((diffDays % 3) + 3) % 3;
+      if (rem === 0) return 'A';
+      if (rem === 1) return 'B';
+      return 'C';
     }
 
-    function formatTimeDisplay(totalMinutes) {
-      const isNextDay = totalMinutes >= 24 * 60;
-      const normalized = totalMinutes % (24 * 60);
-      const hour24 = Math.floor(normalized / 60);
-      const mins = normalized % 60;
-      
-      const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
-      const period = hour24 >= 12 ? 'م' : 'ص';
-      const formattedMins = mins.toString().padStart(2, '0');
-      
-      return {
-        timeString: `${hour12}:${formattedMins} ${period}`,
-        isNextDay: isNextDay
-      };
+    function formatTime12(h, m) {
+      const normH = h % 24;
+      const period = normH >= 12 ? 'م' : 'ص';
+      let hour12 = normH % 12;
+      if (hour12 === 0) hour12 = 12;
+      const minStr = m.toString().padStart(2, '0');
+      return `${hour12}:${minStr} ${period}`;
     }
 
-    function updateCalculations() {
-      const inTimeVal = document.getElementById('in-time-input').value;
-      if (!inTimeVal) return;
-
-      const [inH, inM] = inTimeVal.split(':').map(Number);
-      const inMinutes = inH * 60 + inM;
-
-      const durH = parseInt(document.getElementById('duration-hours').value) || 6;
-      const durM = parseInt(document.getElementById('duration-minutes').value) || 0;
+    function recalculate() {
+      const durH = parseInt(document.getElementById('hours-select').value);
+      const durM = parseInt(document.getElementById('mins-select').value);
       const durationMinutes = durH * 60 + durM;
 
-      // Update total badge
-      const formattedH = durH.toString().padStart(2, '0');
-      const formattedM = durM.toString().padStart(2, '0');
-      document.getElementById('duration-total-badge').textContent = `المجموع: ${formattedH}:${formattedM} س`;
+      document.getElementById('total-duration-badge').innerText = 
+        `${durH.toString().padStart(2, '0')}:${durM.toString().padStart(2, '0')} س`;
 
-      // Calculations
-      const presenceStartTotal = inMinutes + (2 * 60) + 1; // +2h 01m
-      const presenceEndTotal = inMinutes + (3 * 60);      // +3h 00m
-      const outTotal = inMinutes + durationMinutes;
+      const inTotalMinutes = inHour * 60 + inMinute;
+      document.getElementById('in-time-display').innerText = formatTime12(inHour, inMinute);
 
-      const startRes = formatTimeDisplay(presenceStartTotal);
-      const endRes = formatTimeDisplay(presenceEndTotal);
-      const outRes = formatTimeDisplay(outTotal);
-
-      // DOM Updates
-      document.getElementById('res-presence-start').textContent = startRes.timeString;
-      document.getElementById('badge-presence-start').innerHTML = startRes.isNextDay ? '<span class="badge-next-day">اليوم التالي</span>' : '';
-
-      document.getElementById('res-presence-end').textContent = endRes.timeString;
-      document.getElementById('badge-presence-end').innerHTML = endRes.isNextDay ? '<span class="badge-next-day">اليوم التالي</span>' : '';
-
-      document.getElementById('res-out-time').textContent = outRes.timeString;
-      document.getElementById('badge-out').innerHTML = outRes.isNextDay ? '<span class="badge-next-day">اليوم التالي</span>' : '';
-    }
-
-    function init() {
-      const today = new Date();
+      // 1. Presence calculation
+      const theoreticalPresStart = inTotalMinutes + 121; // + 2h 1m
+      const theoreticalPresEnd = inTotalMinutes + 180;   // + 3h
       
-      // Update status clock
-      const timeStr = today.getHours().toString().padStart(2, '0') + ':' + today.getMinutes().toString().padStart(2, '0');
-      document.getElementById('live-time').textContent = timeStr;
+      const forcedPresStart = 9 * 60 + 1; // 09:01
+      const forcedPresEnd = 10 * 60;      // 10:00
 
-      // Date Format in Arabic
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('current-date-text').textContent = today.toLocaleDateString('ar-KW', options);
+      const isEarly = inTotalMinutes < 540 && theoreticalPresStart < forcedPresStart;
+      
+      const presStart = isEarly ? forcedPresStart : theoreticalPresStart;
+      const presEnd = isEarly ? forcedPresEnd : theoreticalPresEnd;
 
-      // Shift Info
-      const shift = calculateCurrentShift(today);
-      document.getElementById('shift-letter').textContent = shift;
+      document.getElementById('early-presence-badge').style.display = isEarly ? 'inline-block' : 'none';
+      document.getElementById('presence-start-val').innerText = formatTime12(Math.floor(presStart / 60), presStart % 60);
+      document.getElementById('presence-end-val').innerText = formatTime12(Math.floor(presEnd / 60), presEnd % 60);
 
-      // Event listeners
-      document.getElementById('in-time-input').addEventListener('input', updateCalculations);
-      document.getElementById('duration-hours').addEventListener('change', updateCalculations);
-      document.getElementById('duration-minutes').addEventListener('change', updateCalculations);
+      // 2. Late arrival & Out time calculation
+      const maxInMinutes = 8 * 60 + 30; // 08:30 (510 min)
+      const isLate = inTotalMinutes > maxInMinutes;
+      const lateMinutes = isLate ? (inTotalMinutes - maxInMinutes) : 0;
 
-      updateCalculations();
+      const lateBanner = document.getElementById('late-banner');
+      const outCard = document.getElementById('out-time-card');
+      const outTitle = document.getElementById('out-title');
+      const outSub = document.getElementById('out-sub');
+      const outVal = document.getElementById('out-val');
+
+      if (isLate) {
+        lateBanner.style.display = 'flex';
+        document.getElementById('late-title').innerText = `تأخير مسجل: ${lateMinutes} دقيقة`;
+        outCard.classList.add('is-late');
+        outTitle.innerText = 'موعد الخروج المعتمد (الحد الأقصى)';
+        outTitle.style.color = '#92400E';
+        outSub.innerText = 'سقف الدوام بناءً على سقف 08:30 ص';
+        outSub.style.color = '#B45309';
+
+        const cappedOut = maxInMinutes + durationMinutes;
+        outVal.innerText = formatTime12(Math.floor(cappedOut / 60), cappedOut % 60);
+        outVal.style.color = '#D97706';
+      } else {
+        lateBanner.style.display = 'none';
+        outCard.classList.remove('is-late');
+        outTitle.innerText = 'بصمة الخروج';
+        outTitle.style.color = '#065F46';
+        outSub.innerText = 'الدوام المكتمل';
+        outSub.style.color = '#047857';
+
+        const normalOut = inTotalMinutes + durationMinutes;
+        outVal.innerText = formatTime12(Math.floor(normalOut / 60), normalOut % 60);
+        outVal.style.color = '#059669';
+      }
     }
 
-    window.onload = init;
+    function openTimePrompt() {
+      const input = prompt('أدخل وقت الحضور (مثال 07:30 أو 08:45 أو 06:00):', `${inHour}:${inMinute.toString().padStart(2, '0')}`);
+      if (input) {
+        const parts = input.split(':');
+        if (parts.length === 2) {
+          const h = parseInt(parts[0]);
+          const m = parseInt(parts[1]);
+          if (!isNaN(h) && !isNaN(m) && h >= 0 && h < 24 && m >= 0 && m < 60) {
+            inHour = h;
+            inMinute = m;
+            recalculate();
+          }
+        }
+      }
+    }
+
+    function onDurationChange() {
+      recalculate();
+    }
+
+    // Calendar logic
+    const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+    function renderCalendar() {
+      const y = calendarDate.getFullYear();
+      const m = calendarDate.getMonth();
+      document.getElementById('cal-month-title').innerText = `${monthNamesAr[m]} ${y}`;
+
+      const firstDay = new Date(y, m, 1);
+      const totalDays = new Date(y, m + 1, 0).getDate();
+      
+      // Saturday = 0 in our layout (JS getDay(): Sun=0, Mon=1... Sat=6)
+      const startDayIndex = (firstDay.getDay() + 1) % 7; 
+
+      const grid = document.getElementById('calendar-days-grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < startDayIndex; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day-cell empty';
+        grid.appendChild(empty);
+      }
+
+      let countA = 0, countB = 0, countC = 0;
+      const today = new Date();
+
+      for (let day = 1; day <= totalDays; day++) {
+        const cDate = new Date(y, m, day);
+        const shift = getShiftForDate(cDate);
+        if (shift === 'A') countA++;
+        if (shift === 'B') countB++;
+        if (shift === 'C') countC++;
+
+        const cell = document.createElement('div');
+        const shiftClass = shift === 'A' ? 'shift-a-cell' : (shift === 'B' ? 'shift-b-cell' : 'shift-c-cell');
+        const isToday = (today.getFullYear() === y && today.getMonth() === m && today.getDate() === day);
+
+        cell.className = `day-cell ${shiftClass} ${isToday ? 'is-today' : ''}`;
+        
+        if (activeFilter && activeFilter !== shift) {
+          cell.style.opacity = '0.2';
+        }
+
+        cell.innerHTML = `
+          <span>${day}</span>
+          <span class="shift-tag">${shift}</span>
+        `;
+        grid.appendChild(cell);
+      }
+
+      document.getElementById('stat-count-a').innerText = `${countA} يوم`;
+      document.getElementById('stat-count-b').innerText = `${countB} يوم`;
+      document.getElementById('stat-count-c').innerText = `${countC} يوم`;
+    }
+
+    function prevMonth() {
+      calendarDate.setMonth(calendarDate.getMonth() - 1);
+      renderCalendar();
+    }
+
+    function nextMonth() {
+      calendarDate.setMonth(calendarDate.getMonth() + 1);
+      renderCalendar();
+    }
+
+    function setShiftFilter(shift, btn) {
+      activeFilter = shift;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCalendar();
+    }
+
+    function switchTab(tab) {
+      if (tab === 'calc') {
+        document.getElementById('tab-calculator').style.display = 'flex';
+        document.getElementById('tab-schedule').style.display = 'none';
+        document.getElementById('nav-calc-btn').classList.add('active');
+        document.getElementById('nav-sched-btn').classList.remove('active');
+        document.getElementById('page-title').innerText = 'شيفت اليوم ومواعيد البصمة';
+      } else {
+        document.getElementById('tab-calculator').style.display = 'none';
+        document.getElementById('tab-schedule').style.display = 'flex';
+        document.getElementById('nav-calc-btn').classList.remove('active');
+        document.getElementById('nav-sched-btn').classList.add('active');
+        document.getElementById('page-title').innerText = 'جدول النوبات (شهري وسنوي)';
+        renderCalendar();
+      }
+    }
+
+    // Init
+    recalculate();
+    renderCalendar();
   </script>
 </body>
 </html>
