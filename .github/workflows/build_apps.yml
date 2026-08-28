@@ -25,8 +25,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Initialize Android Platform Files
-        run: flutter create --org com.kpahours --project-name kpa_shift_app --platforms=android .
+      - name: Recreate Clean Platform Files
+        run: |
+          rm -rf android ios
+          flutter create --org com.kpahours --project-name kpa_shift_app .
 
       - name: Get Dependencies
         run: flutter pub get
@@ -56,8 +58,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Initialize iOS Platform Files
-        run: flutter create --org com.kpahours --project-name kpa_shift_app --platforms=ios .
+      - name: Recreate Clean Platform Files
+        run: |
+          rm -rf android ios
+          flutter create --org com.kpahours --project-name kpa_shift_app .
 
       - name: Get Dependencies
         run: flutter pub get
@@ -70,5 +74,3 @@ jobs:
         with:
           name: KPA-Shift-Tracker-iOS
           path: build/ios/iphoneos
-
-
