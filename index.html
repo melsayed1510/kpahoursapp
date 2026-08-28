@@ -778,6 +778,8 @@
 
     }
 
+    const dayNamesAr = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+
     function onLookupDateChange() {
       const input = document.getElementById('lookup-date-input').value;
       if (input) {
@@ -785,7 +787,7 @@
         const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
         const shift = getShiftForDate(date);
         
-        const dateLabel = `${parts[2]} ${monthNamesAr[date.getMonth()]} ${date.getFullYear()}`;
+        const dateLabel = `${dayNamesAr[date.getDay()]}، ${parseInt(parts[2])} ${monthNamesAr[date.getMonth()]} ${date.getFullYear()}`;
         document.getElementById('lookup-date-label').innerText = dateLabel;
         document.getElementById('lookup-shift-val').innerText = shift;
 
@@ -842,9 +844,20 @@
       }
     }
 
-    // Set today as default lookup date
-    const todayStr = new Date().toISOString().split('T')[0];
+    // Local today date initialization
+    const localNow = new Date();
+    const yStr = localNow.getFullYear();
+    const mStr = String(localNow.getMonth() + 1).padStart(2, '0');
+    const dStr = String(localNow.getDate()).padStart(2, '0');
+    const todayStr = `${yStr}-${mStr}-${dStr}`;
+
+    // Set today in inputs and cards
+    calendarDate = new Date(localNow.getFullYear(), localNow.getMonth(), 1);
     document.getElementById('lookup-date-input').value = todayStr;
+    
+    const todayFormatted = `${dayNamesAr[localNow.getDay()]}، ${localNow.getDate()} ${monthNamesAr[localNow.getMonth()]} ${localNow.getFullYear()}`;
+    document.getElementById('hero-date').innerText = todayFormatted;
+    document.getElementById('hero-shift-badge').innerText = getShiftForDate(localNow);
 
     // Init
     recalculate();
