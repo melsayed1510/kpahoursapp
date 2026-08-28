@@ -15,6 +15,7 @@ class ShiftScheduleScreen extends ConsumerStatefulWidget {
 class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
   final ShiftCalculatorService _shiftCalculator = ShiftCalculatorService();
   DateTime _currentDate = DateTime.now();
+  DateTime _lookupDate = DateTime.now();
   ShiftType? _filterShift;
   bool _isYearView = false;
 
@@ -69,7 +70,7 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'جدول النوبات (شهري وسنوي)',
+          'جدول النوبات',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
@@ -80,16 +81,21 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // 1. شريط التحكم في العرض وفلترة النوبة (ممركزة في المنتصف)
               _buildViewAndFilterControls(),
               const SizedBox(height: 14),
+
+              // 2. شريط التنقل الزمني (الشهر / السنة)
               _buildDateNavigator(),
               const SizedBox(height: 16),
+
+              // 3. المحتوى الرئيسي (عرض شهري أو سنوي)
               if (_isYearView)
                 _buildYearlyOverview()
               else ...[
                 _buildMonthlyCalendar(),
                 const SizedBox(height: 16),
-                _buildMonthlyStats(),
+                _buildDateLookupCard(),
               ],
               const SizedBox(height: 24),
             ],
@@ -158,20 +164,23 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
+
+          // فلترة حسب الوردية (ممركزة في المنتصف بشكل أنيق)
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 'الوردية:',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF64748B)),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               _buildFilterChip('الكل', null),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               _buildFilterChip('A', ShiftType.a),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               _buildFilterChip('B', ShiftType.b),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               _buildFilterChip('C', ShiftType.c),
             ],
           ),
@@ -189,18 +198,18 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
 
     return InkWell(
       onTap: () => setState(() => _filterShift = type),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         decoration: BoxDecoration(
           color: isSelected ? color : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? color : const Color(0xFFCBD5E1)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: isSelected ? color : const Color(0xFFCBD5E1), width: isSelected ? 1.5 : 1),
         ),
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: FontWeight.bold,
             color: isSelected ? Colors.white : const Color(0xFF334155),
           ),
@@ -234,25 +243,13 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
             onPressed: _isYearView ? _previousYear : _previousMonth,
             tooltip: 'السابق',
           ),
-          Column(
-            children: [
-              Text(
-                _isYearView ? 'سنة $yearStr' : '$monthName $yearStr',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              if (!_isYearView)
-                Text(
-                  'دورة النوبات الثلاثية (A / B / C)',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.white.withOpacity(0.85),
-                  ),
-                ),
-            ],
+          Text(
+            _isYearView ? 'سنة $yearStr' : '$monthName $yearStr',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.chevron_left_rounded, color: Colors.white, size: 28),
@@ -329,45 +326,53 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
               final isToday = today.year == year && today.month == month && today.day == dayNum;
               final isDimmed = _filterShift != null && _filterShift != shift;
 
-              return Opacity(
-                opacity: isDimmed ? 0.25 : 1.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isToday ? AppColors.primary.withOpacity(0.08) : _getShiftBg(shift),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isToday ? AppColors.primary : _getShiftColor(shift).withOpacity(0.4),
-                      width: isToday ? 2 : 1,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$dayNum',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: isToday ? FontWeight.w900 : FontWeight.bold,
-                          color: isToday ? AppColors.primary : const Color(0xFF1E293B),
-                        ),
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    _lookupDate = cellDate;
+                  });
+                },
+                borderRadius: BorderRadius.circular(10),
+                child: Opacity(
+                  opacity: isDimmed ? 0.25 : 1.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isToday ? AppColors.primary.withOpacity(0.08) : _getShiftBg(shift),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isToday ? AppColors.primary : _getShiftColor(shift).withOpacity(0.4),
+                        width: isToday ? 2 : 1,
                       ),
-                      const SizedBox(height: 2),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: _getShiftColor(shift),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          shift.code,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$dayNum',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: isToday ? FontWeight.w900 : FontWeight.bold,
+                            color: isToday ? AppColors.primary : const Color(0xFF1E293B),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: _getShiftColor(shift),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            shift.code,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -378,73 +383,142 @@ class _ShiftScheduleScreenState extends ConsumerState<ShiftScheduleScreen> {
     );
   }
 
-  Widget _buildMonthlyStats() {
-    final year = _currentDate.year;
-    final month = _currentDate.month;
-    final daysInMonth = DateTime(year, month + 1, 0).day;
-
-    int countA = 0;
-    int countB = 0;
-    int countC = 0;
-
-    for (int day = 1; day <= daysInMonth; day++) {
-      final shift = _shiftCalculator.shiftForDate(DateTime(year, month, day));
-      if (shift == ShiftType.a) countA++;
-      if (shift == ShiftType.b) countB++;
-      if (shift == ShiftType.c) countC++;
-    }
+  // بطاقة الاستعلام عن نوبة أي تاريخ
+  Widget _buildDateLookupCard() {
+    final shift = _shiftCalculator.shiftForDate(_lookupDate);
+    final formattedLookupDate = DateFormat('EEEE، d MMMM yyyy', 'ar').format(_lookupDate);
+    final shiftColor = _getShiftColor(shift);
+    final shiftBg = _getShiftBg(shift);
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'إحصائيات نوبات هذا الشهر:',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
-          ),
-          const SizedBox(height: 10),
-          Row(
+          const Row(
             children: [
-              _buildStatCard('نوبة A', countA, const Color(0xFF1E40AF), const Color(0xFFEFF6FF)),
-              const SizedBox(width: 8),
-              _buildStatCard('نوبة B', countB, const Color(0xFF047857), const Color(0xFFECFDF5)),
-              const SizedBox(width: 8),
-              _buildStatCard('نوبة C', countC, const Color(0xFFB45309), const Color(0xFFFFFBEB)),
+              Icon(Icons.search_rounded, size: 20, color: AppColors.primary),
+              SizedBox(width: 8),
+              Text(
+                'استعلام عن نوبة تاريخ معين',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+              ),
             ],
           ),
-        ],
-      ),
-    );
-  }
+          const SizedBox(height: 12),
 
-  Widget _buildStatCard(String title, int count, Color color, Color bg) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color),
+          // زر اختيار التاريخ
+          InkWell(
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: _lookupDate,
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2035),
+                locale: const Locale('ar'),
+              );
+              if (picked != null) {
+                setState(() {
+                  _lookupDate = picked;
+                });
+              }
+            },
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFCBD5E1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.event_rounded, color: AppColors.primary, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        formattedLookupDate,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'تغيير التاريخ',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              '$count يوم',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: color),
+          ),
+
+          const SizedBox(height: 12),
+
+          // عرض نتيجة النوبة
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: shiftBg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: shiftColor.withOpacity(0.3), width: 1.5),
             ),
-          ],
-        ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'نوبة هذا اليوم هي:',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      formattedLookupDate,
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: shiftColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'نوبة ',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      Text(
+                        shift.code,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

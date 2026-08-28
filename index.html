@@ -336,9 +336,10 @@
 
     .filter-tabs {
       display: flex;
-      gap: 6px;
-      margin: 10px 0;
+      gap: 8px;
+      margin: 12px 0;
       align-items: center;
+      justify-content: center;
     }
     .filter-btn {
       padding: 4px 10px;
@@ -551,16 +552,13 @@
       <!-- Date Navigator -->
       <div class="date-nav-bar">
         <button class="nav-arrow-btn" onclick="prevMonth()">▶</button>
-        <div>
-          <div class="nav-month-title" id="cal-month-title">أغسطس 2026</div>
-          <div style="font-size: 10px; opacity: 0.9;">دورة النوبات الثلاثية (A / B / C)</div>
-        </div>
+        <div class="nav-month-title" id="cal-month-title">أغسطس 2026</div>
         <button class="nav-arrow-btn" onclick="nextMonth()">◀</button>
       </div>
 
-      <!-- Filters -->
+      <!-- Filters (Centered) -->
       <div class="filter-tabs">
-        <span style="font-size: 11px; font-weight: 800; color: #64748B;">الوردية:</span>
+        <span style="font-size: 12px; font-weight: 800; color: #64748B;">الوردية:</span>
         <button class="filter-btn active" onclick="setShiftFilter(null, this)">الكل</button>
         <button class="filter-btn" onclick="setShiftFilter('A', this)">A</button>
         <button class="filter-btn" onclick="setShiftFilter('B', this)">B</button>
@@ -583,21 +581,25 @@
         </div>
       </div>
 
-      <!-- Monthly Stats -->
-      <div class="card" style="padding: 12px;">
-        <div style="font-size: 12px; font-weight: 800; color: #334155;">إحصائيات نوبات هذا الشهر:</div>
-        <div class="stats-row">
-          <div class="stat-box a">
-            <div>نوبة A</div>
-            <div class="stat-val" id="stat-count-a">11 يوم</div>
+      <!-- Date Lookup Card (استعلام عن نوبة أي يوم) -->
+      <div class="card" style="padding: 16px;">
+        <div class="section-title">
+          <span>🔍</span>
+          <span>استعلام عن نوبة تاريخ معين</span>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <input type="date" id="lookup-date-input" class="styled-select" style="padding: 8px 12px; font-size: 14px;" onchange="onLookupDateChange()" />
+        </div>
+
+        <div id="lookup-result-box" style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 12px; color: #475569; font-weight: 700;">نوبة هذا اليوم هي:</div>
+            <div id="lookup-date-label" style="font-size: 13.5px; font-weight: 800; color: #1E293B;">السبت، 29 أغسطس 2026</div>
           </div>
-          <div class="stat-box b">
-            <div>نوبة B</div>
-            <div class="stat-val" id="stat-count-b">10 يوم</div>
-          </div>
-          <div class="stat-box c">
-            <div>نوبة C</div>
-            <div class="stat-val" id="stat-count-c">10 يوم</div>
+          <div id="lookup-shift-tag" style="background: #1E40AF; color: #FFFFFF; padding: 6px 14px; border-radius: 12px; display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 13px; font-weight: 800;">نوبة</span>
+            <span id="lookup-shift-val" style="font-size: 18px; font-weight: 900;">A</span>
           </div>
         </div>
       </div>
@@ -779,9 +781,36 @@
         grid.appendChild(cell);
       }
 
-      document.getElementById('stat-count-a').innerText = `${countA} يوم`;
-      document.getElementById('stat-count-b').innerText = `${countB} يوم`;
-      document.getElementById('stat-count-c').innerText = `${countC} يوم`;
+    }
+
+    function onLookupDateChange() {
+      const input = document.getElementById('lookup-date-input').value;
+      if (input) {
+        const parts = input.split('-');
+        const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        const shift = getShiftForDate(date);
+        
+        const dateLabel = `${parts[2]} ${monthNamesAr[date.getMonth()]} ${date.getFullYear()}`;
+        document.getElementById('lookup-date-label').innerText = dateLabel;
+        document.getElementById('lookup-shift-val').innerText = shift;
+
+        const box = document.getElementById('lookup-result-box');
+        const tag = document.getElementById('lookup-shift-tag');
+
+        if (shift === 'A') {
+          box.style.background = 'var(--shift-a-bg)';
+          box.style.borderColor = 'rgba(30, 64, 175, 0.3)';
+          tag.style.background = 'var(--shift-a)';
+        } else if (shift === 'B') {
+          box.style.background = 'var(--shift-b-bg)';
+          box.style.borderColor = 'rgba(4, 120, 87, 0.3)';
+          tag.style.background = 'var(--shift-b)';
+        } else {
+          box.style.background = 'var(--shift-c-bg)';
+          box.style.borderColor = 'rgba(180, 83, 9, 0.3)';
+          tag.style.background = 'var(--shift-c)';
+        }
+      }
     }
 
     function prevMonth() {
@@ -813,14 +842,19 @@
         document.getElementById('tab-schedule').style.display = 'flex';
         document.getElementById('nav-calc-btn').classList.remove('active');
         document.getElementById('nav-sched-btn').classList.add('active');
-        document.getElementById('page-title').innerText = 'جدول النوبات (شهري وسنوي)';
+        document.getElementById('page-title').innerText = 'جدول النوبات';
         renderCalendar();
       }
     }
 
+    // Set today as default lookup date
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('lookup-date-input').value = todayStr;
+
     // Init
     recalculate();
     renderCalendar();
+    onLookupDateChange();
   </script>
 </body>
 </html>
