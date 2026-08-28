@@ -15,29 +15,36 @@ class ShiftHeaderCard extends ConsumerWidget {
     final formattedDate = DateFormat('EEEE، d MMMM yyyy', 'ar').format(now);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // التاريخ
+          // اليوم والتاريخ
           Row(
             children: [
-              const Icon(
-                Icons.calendar_today_rounded,
-                size: 18,
-                color: AppColors.primary,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.calendar_today_rounded,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
               ),
               const SizedBox(width: 10),
               Text(
@@ -51,24 +58,33 @@ class ShiftHeaderCard extends ConsumerWidget {
             ],
           ),
 
-          // حرف النوبة فقط
+          // شارة نوبة A مع تكبير حرف النوبة
           Container(
-            width: 38,
-            height: 38,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: AppColors.primary.withOpacity(0.1),
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primary.withOpacity(0.25), width: 1.5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 1.5),
             ),
-            child: Center(
-              child: Text(
-                currentShift.label,
-                style: const TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.primary,
+            child: Row(
+              children: [
+                const Text(
+                  'نوبة ',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
+                Text(
+                  currentShift.label,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

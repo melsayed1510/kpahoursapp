@@ -444,15 +444,17 @@
 
     <!-- Scrollable Content -->
     <div class="app-content" id="tab-calculator">
-      <!-- 1. Hero Shift Card -->
-      <div class="card hero-card">
-        <div class="hero-top">
-          <span class="date-badge" id="hero-date">السبت، 29 أغسطس 2026</span>
-          <span class="shift-hero-badge" id="hero-shift-badge">وردية A</span>
+      <!-- 1. Clean Date & Shift Card -->
+      <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="background: rgba(31, 95, 168, 0.08); padding: 8px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            📅
+          </div>
+          <div id="hero-date" style="font-size: 14.5px; font-weight: 800; color: #1E293B;">السبت، 29 أغسطس 2026</div>
         </div>
-        <div class="hero-main">
-          <div class="hero-shift-title" id="hero-shift-name">نوبة العمل: A</div>
-          <div class="hero-shift-sub">دورة النوبات الثلاثية المعتمدة</div>
+        <div style="background: rgba(31, 95, 168, 0.1); border: 1.5px solid rgba(31, 95, 168, 0.3); padding: 6px 14px; border-radius: 12px; display: flex; align-items: center; gap: 4px; color: var(--primary);">
+          <span style="font-size: 14px; font-weight: 800;">نوبة</span>
+          <span id="hero-shift-badge" style="font-size: 20px; font-weight: 900;">A</span>
         </div>
       </div>
 
