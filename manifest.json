@@ -1,8 +1,8 @@
 {
-  "name": "حاسبة الدوام - KPA Shift Tracker",
-  "short_name": "حاسبة الدوام",
-  "description": "تطبيق ذكي لحساب بصمة الحضور والانصراف وإثبات التواجد وجدول نوبات الورديات",
-  "id": "kpa-shift-attendance-tracker",
+  "name": "Kpa Work Time",
+  "short_name": "Kpa Work Time",
+  "description": "تطبيق Kpa Work Time لحساب بصمة الحضور والانصراف وإثبات التواجد وجدول نوبات الورديات",
+  "id": "kpa-work-time-app",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

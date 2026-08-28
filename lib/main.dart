@@ -30,7 +30,7 @@ class KpaShiftApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'KPA Shift & Attendance',
+      title: 'Kpa Work Time',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       locale: const Locale('ar'),
