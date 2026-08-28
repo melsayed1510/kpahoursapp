@@ -6,4 +6,6 @@ extension ShiftTypeX on ShiftType {
         ShiftType.b => 'B',
         ShiftType.c => 'C',
       };
+
+  String get code => label;
 }
