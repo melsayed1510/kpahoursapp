@@ -1,21 +1,62 @@
 {
-  "name": "KPA Shift Tracker",
-  "short_name": "KPA Shift",
+  "name": "حاسبة الدوام - KPA Shift Tracker",
+  "short_name": "حاسبة الدوام",
+  "description": "تطبيق ذكي لحساب بصمة الحضور والانصراف وإثبات التواجد وجدول نوبات الورديات",
+  "id": "kpa-shift-attendance-tracker",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#F4F6F9",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "background_color": "#F8FAFC",
   "theme_color": "#1F5FA8",
   "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": [
+    "productivity",
+    "utilities",
+    "business"
+  ],
   "icons": [
     {
-      "src": "assets/icons/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "assets/icons/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "حاسبة البصمة",
+      "short_name": "البصمة",
+      "description": "فتح حاسبة البصمة وساعات العمل",
+      "url": "./index.html#calc",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "جدول النوبات",
+      "short_name": "النوبات",
+      "description": "عرض جدول النوبات الشهري والسنوي",
+      "url": "./index.html#sched",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

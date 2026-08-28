@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KPA Shift & Attendance Tracker</title>
+  <title>حاسبة الدوام - KPA Shift Tracker</title>
+  <meta name="description" content="تطبيق ذكي لحساب بصمة الحضور والانصراف وإثبات التواجد وجدول نوبات الورديات">
+  <meta name="theme-color" content="#1F5FA8">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -853,6 +858,15 @@
     recalculate();
     renderCalendar();
     onLookupDateChange();
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker registered successfully!', reg))
+          .catch((err) => console.warn('Service Worker registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
