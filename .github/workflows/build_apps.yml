@@ -3,6 +3,8 @@ name: Build Native Android APK and iOS
 on:
   push:
     branches: [ main, master ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
